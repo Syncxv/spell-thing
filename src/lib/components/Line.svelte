@@ -6,12 +6,13 @@
 
 {#if lineData}
 	<div
-		style="width: {lineData.width}px;
+		style="
+    position: absolute;
+    width: {lineData.width + 1}px;
     height: 2px;
-    transform: rotate({lineData.rotation}rad);
+    transform: rotate({lineData.rotation}rad) translateX({lineData.width / 2}px) translateZ(-10px);
     background: red;
     
 "
-		class="absolute"
 	/>
 {/if}

@@ -72,16 +72,23 @@
 	id={isMouseDown ? 'down' : 'not down'}
 	class="hi flex items-center justify-center h-screen"
 >
-	<div class="flex items-center justify-center gap-4 w-1/2 aspect-square">
+	<div
+		style="transform-style: preserve-3d;transform: translateZ(10px);"
+		class="flex items-center justify-center gap-4 w-1/2 aspect-square"
+	>
 		{#each letterMatrix as letters}
-			<div class="flex flex-col items-center justify-center gap-4 w-full h-full">
+			<div
+				style="transform-style: preserve-3d;transform: translateZ(10px);"
+				class="flex flex-col items-center justify-center gap-4 w-full h-full"
+			>
 				{#each letters as letter}
 					<div
 						bind:this={letter.elem}
 						on:mouseover={onMouseOver}
 						on:focus={() => 'why'}
 						id={`${letter.col},${letter.row}`}
-						class={`letter relative  bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
+						style="transform-style: preserve-3d;"
+						class={`letter relative z-10 bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
 							isSelected(selectedLetters, letter) ? 'selected' : ''
 						}`}
 					>

@@ -42,14 +42,11 @@ export interface LinePos {
 export function getConnectionPos(startLetter: Letter, endLetter: Letter): LinePos | undefined {
 	if (!startLetter.elem || !endLetter.elem) return;
 
-	const startLetterPosition = {
-		x: startLetter.elem.offsetLeft + startLetter.elem.offsetWidth / 2,
-		y: startLetter.elem.offsetTop + startLetter.elem.offsetHeight / 2
-	};
-	const endLetterPosition = {
-		x: endLetter.elem.offsetLeft + endLetter.elem.offsetWidth / 2,
-		y: endLetter.elem.offsetTop + endLetter.elem.offsetHeight / 2
-	};
+	const startBox = startLetter.elem.getBoundingClientRect();
+	const startLetterPosition = { x: startBox.left, y: startBox.top };
+
+	const endBox = endLetter.elem.getBoundingClientRect();
+	const endLetterPosition = { x: endBox.left, y: endBox.top };
 
 	const directionVector = subtractVectors(startLetterPosition, endLetterPosition);
 	const unitDirectionVector = normalizeVector(directionVector);
