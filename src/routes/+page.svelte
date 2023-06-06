@@ -2,7 +2,7 @@
 	import Line from '$lib/components/Line.svelte';
 	import type { Letter } from '$lib/types';
 	import { connectLetters, getConnectionPos } from '$lib/utils/connectLetters';
-	import { generateRandomLetters } from '$lib/utils/generateRandomLetters';
+	import { generateGridFromCombo, generateRandomLetters } from '$lib/utils/generateGrid';
 	import { isAdjecent } from '$lib/utils/isAdjecent';
 	import { isSelected } from '$lib/utils/isSelected';
 
@@ -109,5 +109,18 @@
 				</div>
 			{/each}
 		</div>
+		<button
+			on:click={() =>
+				fetch('/api/words', {
+					method: 'POST',
+					body: JSON.stringify({
+						combination: letterMatrix
+							.flat()
+							.map((m) => m.letter)
+							.join(''),
+						wordLen: 8
+					})
+				})}>hey</button
+		>
 	</div>
 </div>
