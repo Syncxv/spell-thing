@@ -1,8 +1,10 @@
 <script lang="ts">
+	import Line from '$lib/components/Line.svelte';
 	import type { Letter } from '$lib/types';
-	import { connectLetters } from '$lib/utils/connectLetters';
+	import { connectLetters, getConnectionPos } from '$lib/utils/connectLetters';
 	import { generateRandomLetters } from '$lib/utils/generateRandomLetters';
 	import { isAdjecent } from '$lib/utils/isAdjecent';
+	import { isSelected } from '$lib/utils/isSelected';
 
 	const selectedStyle = 'bg-white text-black';
 
@@ -39,8 +41,8 @@
 		console.log(selectionType);
 		// -1 means select letter XD
 		if (selectionType === -1) {
-			selectedLetters.length > 0 &&
-				connectLetters(selectedLetters[selectedLetters.length - 1], letter, 'red');
+			// selectedLetters.length > 0 &&
+			// 	connectLetters(selectedLetters[selectedLetters.length - 1], letter, 'red');
 			selectedLetters.push(letter);
 			selectedLetters = selectedLetters;
 		}
@@ -81,11 +83,16 @@
 						on:mouseover={onMouseOver}
 						on:focus={() => 'why'}
 						id={`${letter.col},${letter.row}`}
-						class={`letter bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
-							!!selectedLetters.flat().find((m) => m.id === letter.id) ? 'selected' : ''
+						class={`letter relative  bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
+							isSelected(selectedLetters, letter) ? 'selected' : ''
 						}`}
 					>
 						{letter.letter}
+						{#if selectedLetters.length > 0 && isSelected(selectedLetters, letter)}
+							<Line
+								lineData={getConnectionPos(letter, selectedLetters[selectedLetters.length - 1])}
+							/>
+						{/if}
 					</div>
 				{/each}
 			</div>

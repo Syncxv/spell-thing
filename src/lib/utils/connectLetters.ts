@@ -30,6 +30,40 @@ export function connectLetters(startLetter: Letter, endLetter: Letter, linkColor
 	document.body.appendChild(linkDiv);
 }
 
+export interface LinePos {
+	rotation: number;
+	width: number;
+	startLetterPosition: {
+		x: number;
+		y: number;
+	};
+}
+
+export function getConnectionPos(startLetter: Letter, endLetter: Letter): LinePos | undefined {
+	if (!startLetter.elem || !endLetter.elem) return;
+
+	const startLetterPosition = {
+		x: startLetter.elem.offsetLeft + startLetter.elem.offsetWidth / 2,
+		y: startLetter.elem.offsetTop + startLetter.elem.offsetHeight / 2
+	};
+	const endLetterPosition = {
+		x: endLetter.elem.offsetLeft + endLetter.elem.offsetWidth / 2,
+		y: endLetter.elem.offsetTop + endLetter.elem.offsetHeight / 2
+	};
+
+	const directionVector = subtractVectors(startLetterPosition, endLetterPosition);
+	const unitDirectionVector = normalizeVector(directionVector);
+	const rotation = calculateRotation(unitDirectionVector);
+
+	const width = getMagnitude(startLetterPosition, endLetterPosition);
+
+	return {
+		rotation,
+		width,
+		startLetterPosition
+	};
+}
+
 export function subtractVectors(
 	v1: { x: number; y: number },
 	v2: { x: number; y: number }
