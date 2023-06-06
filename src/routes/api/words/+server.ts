@@ -24,75 +24,89 @@ export async function POST({ request }) {
 
 	const grid = generateGridFromCombo(combination);
 
-	console.log(combination, wordLen, grid);
+	const result: Letter[][][] = [];
+	for (let i = 1; i < wordLen + 1; ++i) {
+		result.push(getCombo(i, grid, cachedSet));
+	}
 
-	const result = getAllCombinationsIterative(10, grid);
-
-	console.log(result);
-
-	return json({ hehe: true, result }, { status: 200 });
+	return json(
+		{
+			hehe: true,
+			result: result.map((l) => l.map((word) => word.map((m) => m.letter).join('')))
+		},
+		{ status: 200 }
+	);
 }
 
-interface State {
-	row: number;
-	col: number;
-	visited: boolean[][];
-	combination: Letter[];
-}
-
-function getAllCombinationsIterative(desired: number, grid: Letter[][]): Letter[][] {
+function getCombo(wordLen: number, grid: Letter[][], cachedSet: Set<string>) {
 	const allCombinations: Letter[][] = [];
-	const stack: State[] = [];
 
+	const visited: boolean[][] = Array(size)
+		.fill(false)
+		.map(() => Array(size).fill(false));
 	for (let row = 0; row < size; row++) {
 		for (let col = 0; col < size; col++) {
-			const visited: boolean[][] = Array(size)
-				.fill(false)
-				.map(() => Array(size).fill(false));
-			const combination: Letter[] = [grid[row][col]];
-			visited[row][col] = true;
-			stack.push({ row, col, visited, combination });
-
-			while (stack.length > 0) {
-				const currentState = stack.pop()!;
-				const { row, col, visited, combination } = currentState;
-
-				if (combination.length === desired) {
-					const word = combination
-						.map((s) => s.letter)
-						.join('')
-						.toLowerCase();
-					if (cachedSet!.has(word)) {
-						allCombinations.push(combination.slice());
-					}
-				} else {
-					for (const [dx, dy] of Object.values(directions)) {
-						const newRow = row + dx;
-						const newCol = col + dy;
-
-						if (
-							newRow >= 0 &&
-							newRow < size &&
-							newCol >= 0 &&
-							newCol < size &&
-							!visited[newRow][newCol]
-						) {
-							const newVisited = visited.map((row) => row.slice());
-							newVisited[newRow][newCol] = true;
-							const newCombination = combination.slice();
-							newCombination.push(grid[newRow][newCol]);
-							stack.push({
-								row: newRow,
-								col: newCol,
-								visited: newVisited,
-								combination: newCombination
-							});
-						}
-					}
-				}
+			for (const combination of combinationsGenerator(
+				row,
+				col,
+				wordLen,
+				grid,
+				cachedSet,
+				visited
+			)) {
+				allCombinations.push(combination);
 			}
 		}
 	}
 
 	return allCombinations;
+}
+
+function* combinationsGenerator(
+	row: number,
+	col: number,
+	desired: number,
+	grid: Letter[][],
+	validWordsSet: Set<string>,
+	visited: boolean[][],
+	combination: Letter[] = []
+): Generator<Letter[]> {
+	if (combination.length === desired) {
+		const word = combination
+			.map((s) => s.letter)
+			.join('')
+			.toLowerCase();
+		if (validWordsSet.has(word)) {
+			yield combination.slice();
+		}
+	} else {
+		visited[row][col] = true;
+		combination.push(grid[row][col]);
+
+		for (const [dx, dy] of Object.values(directions)) {
+			const newRow = row + dx;
+			const newCol = col + dy;
+
+			if (
+				newRow >= 0 &&
+				newRow < size &&
+				newCol >= 0 &&
+				newCol < size &&
+				!visited[newRow][newCol]
+			) {
+				yield* combinationsGenerator(
+					newRow,
+					newCol,
+					desired,
+					grid,
+					validWordsSet,
+					visited,
+					combination
+				);
+			}
+		}
+
+		visited[row][col] = false;
+		combination.pop();
+	}
 }
