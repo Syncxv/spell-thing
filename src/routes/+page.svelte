@@ -18,6 +18,7 @@
 
 	function onMouseUp() {
 		isMouseDown = false;
+		selectedLetters = [];
 	}
 
 	function pushLetter(letter: Letter) {
@@ -72,38 +73,41 @@
 	id={isMouseDown ? 'down' : 'not down'}
 	class="hi flex items-center justify-center h-screen"
 >
-	<div
-		style="transform-style: preserve-3d;transform: translateZ(10px);"
-		class="flex items-center justify-center gap-4 w-1/2 aspect-square"
-	>
-		{#each letterMatrix as letters}
-			<div
-				style="transform-style: preserve-3d;transform: translateZ(10px);"
-				class="flex flex-col items-center justify-center gap-4 w-full h-full"
-			>
-				{#each letters as letter}
-					<div
-						bind:this={letter.elem}
-						on:mouseover={onMouseOver}
-						on:focus={() => 'why'}
-						id={`${letter.col},${letter.row}`}
-						style="transform-style: preserve-3d;"
-						class={`letter relative z-10 bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
-							isSelected(selectedLetters, letter) ? 'selected' : ''
-						}`}
-					>
-						{letter.letter}
-						{#if selectedLetters.length > 0 && isSelected(selectedLetters, letter) && selectedLetters[selectedLetters.length - 1].id !== letter.id}
-							<Line
-								lineData={getConnectionPos(
-									letter,
-									selectedLetters[selectedLetters.map((m) => m.id).indexOf(letter.id) + 1]
-								)}
-							/>
-						{/if}
-					</div>
-				{/each}
-			</div>
-		{/each}
+	<div class="flex flex-col items-center justify-center w-full h-full">
+		<h1 class="mb-4">{selectedLetters.map((m) => m.letter).join('') || "g'day"}</h1>
+		<div
+			style="transform-style: preserve-3d;transform: translateZ(10px);"
+			class="flex items-center justify-center gap-4 w-1/2 aspect-square"
+		>
+			{#each letterMatrix as letters}
+				<div
+					style="transform-style: preserve-3d;transform: translateZ(10px);"
+					class="flex flex-col items-center justify-center gap-4 w-full h-full"
+				>
+					{#each letters as letter}
+						<div
+							bind:this={letter.elem}
+							on:mouseover={onMouseOver}
+							on:focus={() => 'why'}
+							id={`${letter.col},${letter.row}`}
+							style="transform-style: preserve-3d;"
+							class={`letter relative z-10 bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
+								isSelected(selectedLetters, letter) ? 'selected' : ''
+							}`}
+						>
+							{letter.letter}
+							{#if selectedLetters.length > 0 && isSelected(selectedLetters, letter) && selectedLetters[selectedLetters.length - 1].id !== letter.id}
+								<Line
+									lineData={getConnectionPos(
+										letter,
+										selectedLetters[selectedLetters.map((m) => m.id).indexOf(letter.id) + 1]
+									)}
+								/>
+							{/if}
+						</div>
+					{/each}
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>
