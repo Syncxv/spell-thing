@@ -25,10 +25,9 @@ export const generateGridFromCombo = (combo: string) => {
 	for (let row = 0; row < size; row++) {
 		tempGrid[row] = [];
 		for (let col = 0; col < size; col++) {
-			const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
 			tempGrid[row][col] = {
 				id: uuidv4(),
-				letter: randomLetter,
+				letter: combo[col * 5 + row],
 				row,
 				col
 			};
