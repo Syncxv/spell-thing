@@ -1,35 +1,5 @@
 import type { Letter } from '$lib/types';
 
-export function connectLetters(startLetter: Letter, endLetter: Letter, linkColor: string) {
-	if (!startLetter.elem || !endLetter.elem) return;
-
-	const startLetterPosition = {
-		x: startLetter.elem.offsetLeft + startLetter.elem.offsetWidth / 2,
-		y: startLetter.elem.offsetTop + startLetter.elem.offsetHeight / 2
-	};
-	const endLetterPosition = {
-		x: endLetter.elem.offsetLeft + endLetter.elem.offsetWidth / 2,
-		y: endLetter.elem.offsetTop + endLetter.elem.offsetHeight / 2
-	};
-
-	const directionVector = subtractVectors(startLetterPosition, endLetterPosition);
-	const unitDirectionVector = normalizeVector(directionVector);
-	const rotation = calculateRotation(unitDirectionVector);
-
-	const linkDiv = document.createElement('div');
-	linkDiv.style.position = 'absolute';
-	linkDiv.style.width = `${getMagnitude(startLetterPosition, endLetterPosition)}px`;
-	linkDiv.style.height = '2px';
-	linkDiv.style.transformOrigin = '0% 50%';
-	linkDiv.style.transform = `rotate(${rotation}rad)`;
-	linkDiv.style.left = `${startLetterPosition.x}px`;
-	linkDiv.style.top = `${startLetterPosition.y}px`;
-	linkDiv.style.background = linkColor;
-	linkDiv.style.zIndex = '0';
-	linkDiv.id = 'bruh-link';
-	document.body.appendChild(linkDiv);
-}
-
 export interface LinePos {
 	rotation: number;
 	width: number;

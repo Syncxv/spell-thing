@@ -3,8 +3,7 @@
 	import Results from '$lib/components/Results.svelte';
 	import { letterMatrixStore } from '$lib/stores/letter';
 	import type { Letter } from '$lib/types';
-	import { connectLetters, getConnectionPos } from '$lib/utils/connectLetters';
-	import { generateGridFromCombo, generateRandomLetters } from '$lib/utils/generateGrid';
+	import { getConnectionPos } from '$lib/utils/connectLetters';
 	import { isAdjecent } from '$lib/utils/isAdjecent';
 	import { isSelected } from '$lib/utils/isSelected';
 
