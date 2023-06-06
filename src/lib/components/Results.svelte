@@ -2,9 +2,11 @@
 	import { letterMatrixStore } from '$lib/stores/letter';
 	import type { Letter } from '$lib/types';
 	import { size } from '$lib/utils/constants';
-	import { generateGridFromCombo } from '$lib/utils/generateGrid';
+	import { generateGridFromCombo, generateGridFromComboClient } from '$lib/utils/generateGrid';
 	import Input from './Input.svelte';
 	import Carret from './icons/Carret.svelte';
+
+	export let moveFrom: (from: Letter, to: Letter) => void;
 
 	let results: Letter[][][] = [];
 	let hasSumbited = false;
@@ -19,7 +21,8 @@
 
 	async function handleSubmit() {
 		if (combo.length != size * size) return console.error('invalid combo');
-		$letterMatrixStore = generateGridFromCombo(combo);
+		$letterMatrixStore = generateGridFromComboClient(combo, $letterMatrixStore);
+		letterMatrixStore.update((n) => n); // This forces the store to update its subscribers
 
 		const response = await fetch('/api/words', {
 			method: 'POST',
@@ -31,24 +34,25 @@
 				wordLen
 			})
 		});
-		const data: { result: { col: number; row: number }[][][] } = await response.json();
-		// Convert each group of words to a string representation to check for uniqueness
-		let uniqueResults = new Set<string>();
 
-		data.result.forEach((wordGroup) => {
-			// Use JSON.stringify to get a string representation of each word group
-			const wordGroupString = JSON.stringify(
-				wordGroup.map((word) => word.map((l) => $letterMatrixStore[l.col][l.row]))
-			);
+		const seenWords = new Set<string>();
 
-			// If this wordGroupString is not already in the Set, add it
-			if (!uniqueResults.has(wordGroupString)) {
-				uniqueResults.add(wordGroupString);
-			}
-		});
+		const data: { result: { col: number; row: number; letter: string }[][][] } =
+			await response.json();
+		results = data.result.map((m) =>
+			m
+				.map((e) => {
+					const res = e.map((l) => $letterMatrixStore[l.col][l.row]);
 
-		// Convert the Set back to a three-dimensional array
-		results = Array.from(uniqueResults).map((wordGroupString) => JSON.parse(wordGroupString));
+					const word = res.map((m) => m.letter).join('');
+					if (seenWords.has(word)) return;
+
+					seenWords.add(word);
+
+					return res;
+				})
+				.filter((el): el is Letter[] => Boolean(el))
+		);
 
 		hasSumbited = true;
 	}
@@ -94,15 +98,24 @@
 
 				{#if results[letterCount - 1]}
 					<h2>{letterCount} Letter Words</h2>
-					<ul class="flex flex-wrap gap-3 max-h-[27rem] overflow-y-auto">
+					<div class="flex flex-wrap gap-3 max-h-[27rem] overflow-y-auto">
 						{#each results[letterCount - 1] as word, wordIndex (word
 							.map((letter) => letter.letter)
 							.join('') + (letterCount - 1) + wordIndex)}
-							<li class="bg-gray-300 p-3 rounded-md text-black">
+							<button
+								type="button"
+								class="bg-gray-300 p-3 rounded-md text-black"
+								on:click={() => {
+									results[letterCount - 1][wordIndex].reduce((prev, curr) => {
+										moveFrom(prev, curr);
+										return curr;
+									});
+								}}
+							>
 								{word.map((letter) => letter.letter).join('')}
-							</li>
+							</button>
 						{/each}
-					</ul>
+					</div>
 
 					{#if results[letterCount - 1].length === 0}
 						<p>welp no results for {letterCount}</p>

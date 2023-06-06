@@ -12,9 +12,14 @@
 
 	let isMouseDown = false;
 
+	function getLetterFromEvent(e: MouseEvent): Letter | null {
+		return $letterMatrixStore.flat().find((m) => m.elem === e.target) || null;
+	}
+
 	function onMouseDown(e: MouseEvent) {
 		isMouseDown = true;
-		onMouseOver(e);
+		const letter = getLetterFromEvent(e);
+		if (letter) onMouseOver(letter);
 	}
 
 	function onMouseUp() {
@@ -54,13 +59,15 @@
 		}
 	}
 
-	function onMouseOver(e: MouseEvent) {
+	function onMouseOver(letter: Letter) {
 		if (!isMouseDown) return;
 
-		const letter = $letterMatrixStore.flat().find((m) => m.elem === e.target);
-		if (!letter) return;
-
 		pushLetter(letter);
+	}
+
+	function moveFrom(from: Letter, to: Letter) {
+		pushLetter(from);
+		pushLetter(to);
 	}
 
 	$: {
@@ -92,7 +99,7 @@
 					{#each letters as letter}
 						<div
 							bind:this={letter.elem}
-							on:mouseover={onMouseOver}
+							on:mouseover={() => onMouseOver(letter)}
 							on:focus={() => 'why'}
 							id={`${letter.col},${letter.row}`}
 							style="transform-style: preserve-3d;"
@@ -116,5 +123,5 @@
 		</div>
 	</div>
 
-	<Results />
+	<Results {moveFrom} />
 </div>
