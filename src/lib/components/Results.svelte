@@ -3,9 +3,14 @@
 	import type { Letter } from '$lib/types';
 	import { size } from '$lib/utils/constants';
 	import { generateGridFromCombo } from '$lib/utils/generateGrid';
+	import Input from './Input.svelte';
+	import Carret from './icons/Carret.svelte';
 
 	let results: Letter[][][] = [];
 	let hasSumbited = false;
+
+	let letterCount = 1;
+	let wordLen = 5;
 
 	let combo = $letterMatrixStore
 		.flat()
@@ -23,12 +28,28 @@
 					.flat()
 					.map((m) => m.letter)
 					.join(''),
-				wordLen: 5
+				wordLen
 			})
 		});
 		const data: { result: { col: number; row: number }[][][] } = await response.json();
+		// Convert each group of words to a string representation to check for uniqueness
+		let uniqueResults = new Set<string>();
 
-		results = data.result.map((m) => m.map((e) => e.map((l) => $letterMatrixStore[l.col][l.row])));
+		data.result.forEach((wordGroup) => {
+			// Use JSON.stringify to get a string representation of each word group
+			const wordGroupString = JSON.stringify(
+				wordGroup.map((word) => word.map((l) => $letterMatrixStore[l.col][l.row]))
+			);
+
+			// If this wordGroupString is not already in the Set, add it
+			if (!uniqueResults.has(wordGroupString)) {
+				uniqueResults.add(wordGroupString);
+			}
+		});
+
+		// Convert the Set back to a three-dimensional array
+		results = Array.from(uniqueResults).map((wordGroupString) => JSON.parse(wordGroupString));
+
 		hasSumbited = true;
 	}
 
@@ -43,10 +64,57 @@
 
 <div class="results-options h-full w-full">
 	{#if hasSumbited}
-		<div class="res">
-			<h1>results</h1>
+		<div class="flex flex-col items-start justify-between h-full px-8 pt-10">
+			<div class="content w-full">
+				<h1>results</h1>
 
-			<button type="button" on:click={newBoard}>New Board</button>
+				<div class="idkwhattocallthis relative h-10 w-full">
+					<button
+						on:click={() => (letterCount === 1 ? void 0 : letterCount--)}
+						type="button"
+						class="btn flex items-center justify-center absolute bg-gray-600 h-full w-[10%] cursor-pointer rounded-tl-[6px]"
+					>
+						<Carret className="fill-gray-100" />
+					</button>
+					<input
+						type="number"
+						min="1"
+						max={wordLen}
+						bind:value={letterCount}
+						class="h-full w-full rounded-[7px] text-gray-950 text-center"
+					/>
+					<button
+						on:click={() => (letterCount === wordLen ? void 0 : letterCount++)}
+						type="button"
+						class="btn flex items-center justify-center absolute right-0 top-0 bg-gray-600 h-full w-[10%] cursor-pointer rounded-tr-[6px]"
+					>
+						<Carret className="fill-gray-100 rotate-180" />
+					</button>
+				</div>
+
+				{#if results[letterCount - 1]}
+					<h2>{letterCount} Letter Words</h2>
+					<ul class="flex flex-wrap gap-3 max-h-[27rem] overflow-y-auto">
+						{#each results[letterCount - 1] as word, wordIndex (word
+							.map((letter) => letter.letter)
+							.join('') + (letterCount - 1) + wordIndex)}
+							<li class="bg-gray-300 p-3 rounded-md text-black">
+								{word.map((letter) => letter.letter).join('')}
+							</li>
+						{/each}
+					</ul>
+
+					{#if results[letterCount - 1].length === 0}
+						<p>welp no results for {letterCount}</p>
+					{/if}
+				{/if}
+			</div>
+
+			<button
+				type="button"
+				class="bg-purple-500 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md"
+				on:click={newBoard}>New Board</button
+			>
 		</div>
 	{:else}
 		<form
@@ -54,22 +122,16 @@
 			on:submit|preventDefault={handleSubmit}
 		>
 			<div class="content w-full">
-				<!-- https://www.material-tailwind.com/docs/html/input -->
-				<div class="relative h-10 w-full min-w-[200px]">
-					<input
-						id="combo"
-						class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-pink-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-						placeholder=" "
-						bind:value={combo}
-					/>
-					<label
-						for="combo"
-						class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-pink-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"
-					>
-						Outlined
-					</label>
-				</div>
-				<!-- <input type="text"  class="text-slate-950" /> -->
+				<Input type="text" id="combo" label="Combo" bind:value={combo} />
+				<Input
+					type="number"
+					min={1}
+					max={15}
+					id="wordLen"
+					label="Max Word Length"
+					wrapperClassName="mt-4"
+					bind:value={wordLen}
+				/>
 			</div>
 
 			<button
