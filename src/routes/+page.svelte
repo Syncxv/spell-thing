@@ -6,7 +6,7 @@
 	import { isAdjecent } from '$lib/utils/isAdjecent';
 	import { isSelected } from '$lib/utils/isSelected';
 
-	let letterMatrix = generateRandomLetters();
+	const letterMatrix = generateGridFromCombo('EOTAGOJNWGETVPEARNLDIKIUB');
 	let selectedLetters: Letter[] = [];
 
 	let isMouseDown = false;
@@ -62,8 +62,31 @@
 		pushLetter(letter);
 	}
 
+	async function handleSubmit() {
+		const response = await fetch('/api/words', {
+			method: 'POST',
+			body: JSON.stringify({
+				combination: letterMatrix
+					.flat()
+					.map((m) => m.letter)
+					.join(''),
+				wordLen: 5
+			})
+		});
+		const data: { result: { col: number; row: number }[][][] } = await response.json();
+
+		const namingThingsIsHard = data.result.map((m) =>
+			m.map((e) => e.map((l) => letterMatrix[l.col][l.row]))
+		);
+
+		console.log(namingThingsIsHard);
+	}
+
 	$: {
-		console.log(selectedLetters, letterMatrix);
+		if (typeof window != 'undefined') {
+			(window as any).letterMatrix = letterMatrix;
+		}
+		console.log(selectedLetters);
 	}
 </script>
 
@@ -109,18 +132,6 @@
 				</div>
 			{/each}
 		</div>
-		<button
-			on:click={() =>
-				fetch('/api/words', {
-					method: 'POST',
-					body: JSON.stringify({
-						combination: letterMatrix
-							.flat()
-							.map((m) => m.letter)
-							.join(''),
-						wordLen: 8
-					})
-				})}>hey</button
-		>
+		<button on:click={handleSubmit}>hey</button>
 	</div>
 </div>

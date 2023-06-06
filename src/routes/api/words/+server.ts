@@ -32,7 +32,10 @@ export async function POST({ request }) {
 	return json(
 		{
 			hehe: true,
-			result: result.map((l) => l.map((word) => word.map((m) => m.letter).join('')))
+			result: result.map((l) =>
+				l.map((word) => word.map(({ row, col, letter }) => ({ row, col, letter })))
+			),
+			bro: undefined
 		},
 		{ status: 200 }
 	);
