@@ -61,23 +61,25 @@ export function getConnectionPos(startLetter: Letter, endLetter: Letter): LinePo
 	};
 }
 
-export function subtractVectors(
-	v1: { x: number; y: number },
-	v2: { x: number; y: number }
-): { x: number; y: number } {
+interface Vec2 {
+	x: number;
+	y: number;
+}
+
+export function subtractVectors(v1: Vec2, v2: Vec2): Vec2 {
 	return { x: v2.x - v1.x, y: v2.y - v1.y };
 }
 
-export function normalizeVector(v: { x: number; y: number }): { x: number; y: number } {
+export function normalizeVector(v: Vec2): Vec2 {
 	const magnitude = Math.sqrt(v.x * v.x + v.y * v.y);
 	return { x: v.x / magnitude, y: v.y / magnitude };
 }
 
-export function calculateRotation(v: { x: number; y: number }): number {
+export function calculateRotation(v: Vec2): number {
 	return Math.atan2(v.y, v.x);
 }
 
-export function getMagnitude(p1: { x: number; y: number }, p2: { x: number; y: number }): number {
+export function getMagnitude(p1: Vec2, p2: Vec2): number {
 	const xDiff = p2.x - p1.x;
 	const yDiff = p2.y - p1.y;
 	return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
