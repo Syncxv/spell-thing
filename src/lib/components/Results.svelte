@@ -41,7 +41,7 @@
 	}
 </script>
 
-<div class="wrappe h-full w-full">
+<div class="results-options h-full w-full">
 	{#if hasSumbited}
 		<div class="res">
 			<h1>results</h1>
@@ -53,7 +53,7 @@
 			class="flex flex-col justify-between items-start h-full px-8 pt-10"
 			on:submit|preventDefault={handleSubmit}
 		>
-			<div class="content">
+			<div class="content w-full">
 				<!-- https://www.material-tailwind.com/docs/html/input -->
 				<div class="relative h-10 w-full min-w-[200px]">
 					<input
