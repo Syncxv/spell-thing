@@ -6,8 +6,6 @@
 	import { isAdjecent } from '$lib/utils/isAdjecent';
 	import { isSelected } from '$lib/utils/isSelected';
 
-	const selectedStyle = 'bg-white text-black';
-
 	let letterMatrix = generateRandomLetters();
 	let selectedLetters: Letter[] = [];
 
@@ -38,7 +36,7 @@
 				break;
 			}
 
-		console.log(selectionType);
+		// console.log(selectionType);
 		// -1 means select letter XD
 		if (selectionType === -1) {
 			// selectedLetters.length > 0 &&
@@ -88,9 +86,12 @@
 						}`}
 					>
 						{letter.letter}
-						{#if selectedLetters.length > 0 && isSelected(selectedLetters, letter)}
+						{#if selectedLetters.length > 0 && isSelected(selectedLetters, letter) && selectedLetters[selectedLetters.length - 1].id !== letter.id}
 							<Line
-								lineData={getConnectionPos(letter, selectedLetters[selectedLetters.length - 1])}
+								lineData={getConnectionPos(
+									letter,
+									selectedLetters[selectedLetters.map((m) => m.id).indexOf(letter.id) + 1]
+								)}
 							/>
 						{/if}
 					</div>
