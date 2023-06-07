@@ -88,12 +88,12 @@
 		<h1 class="mb-4">{selectedLetters.map((m) => m.letter).join('') || "g'day"}</h1>
 		<div
 			style="transform-style: preserve-3d;transform: translateZ(10px);"
-			class="flex items-center justify-center gap-4 w-full aspect-square"
+			class="flex flex-col items-center justify-center gap-4 w-full aspect-square"
 		>
 			{#each $letterMatrixStore as letters}
 				<div
 					style="transform-style: preserve-3d;transform: translateZ(10px);"
-					class="flex flex-col items-center justify-center gap-4 w-full h-full"
+					class="flex items-center justify-center gap-4 w-full h-full"
 				>
 					{#each letters as letter}
 						<div
