@@ -1,4 +1,3 @@
-import { letterMatrixStore } from '$lib/stores/letter';
 import type { Letter } from '$lib/types';
 import { alphabet, size } from './constants';
 import { uuidv4 } from './uuidv4';

@@ -36,11 +36,7 @@
 			selectedLetters = [];
 		}
 
-		for (var selectionType = -1, o = 0; o < selectedLetters.length; o++)
-			if (selectedLetters[o].id === letter.id) {
-				selectionType = o;
-				break;
-			}
+		const selectionType = selectedLetters.findIndex((l) => l.id === letter.id);
 
 		// console.log(selectionType);
 		// -1 means select letter XD
