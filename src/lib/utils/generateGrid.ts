@@ -1,5 +1,6 @@
-import type { Letter } from '$lib/types';
+import type { Data, Letter } from '$lib/types';
 import { alphabet, size } from './constants';
+import { jsonParse } from './jsonParse';
 import { uuidv4 } from './uuidv4';
 
 export const generateRandomLetters = () => {
@@ -12,7 +13,9 @@ export const generateRandomLetters = () => {
 				id: uuidv4(),
 				letter: randomLetter,
 				row,
-				col
+				col,
+				letterMulti: 0,
+				wordMulti: false
 			};
 		}
 	}
@@ -20,40 +23,30 @@ export const generateRandomLetters = () => {
 };
 
 export const generateGridFromCombo = (combo: string) => {
-	if (combo.length != size * size) throw Error('invalid combo length');
+	let realCombo = combo;
+	let data: Data = {};
+	const [comboo, dataStr] = combo.split('|');
+	if (combo.length != size * size) {
+		if (comboo.length !== size * size) throw Error('invalid combo size');
+		realCombo = comboo;
+		data = jsonParse(dataStr, {});
+	}
 	const tempGrid: Letter[][] = [];
 	for (let row = 0; row < size; row++) {
 		tempGrid[row] = [];
 		for (let col = 0; col < size; col++) {
+			const isLetterMultiRow =
+				data.letterMulti && data.letterMulti?.row === row && data.letterMulti.col === col;
+			const isWordMulti =
+				data.wordMulti != null && data.wordMulti?.row === row && data.wordMulti.col === col;
 			tempGrid[row][col] = {
 				id: uuidv4(),
-				letter: combo[col * 5 + row],
+				letter: realCombo[row * 5 + col],
 				row,
-				col
+				col,
+				letterMulti: isLetterMultiRow && data.letterMulti ? data.letterMulti.multi : 0,
+				wordMulti: isWordMulti
 			};
-		}
-	}
-	return tempGrid;
-};
-
-export const generateGridFromComboClient = (combo: string, previousGrid: Letter[][]) => {
-	if (combo.length != size * size) throw Error('invalid combo length');
-	const tempGrid: Letter[][] = [];
-	for (let row = 0; row < size; row++) {
-		tempGrid[row] = [];
-		for (let col = 0; col < size; col++) {
-			const existingLetter = previousGrid[row]?.[col];
-			if (existingLetter) {
-				existingLetter.letter = combo[col * 5 + row];
-				tempGrid[row][col] = existingLetter;
-			} else {
-				tempGrid[row][col] = {
-					id: uuidv4(),
-					letter: combo[col * 5 + row],
-					row,
-					col
-				};
-			}
 		}
 	}
 	return tempGrid;

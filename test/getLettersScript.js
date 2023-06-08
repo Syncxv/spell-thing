@@ -54,11 +54,20 @@ const findInPixiJsStage = (tree, filter) =>
 	});
 
 const sortLetters = (a, b) => {
-	const rowCompare = a.row - b.row;
-	const colCompare = a.column - b.column;
-	return rowCompare !== 0 ? rowCompare : colCompare;
+	if (a.row < b.row) {
+		return -1;
+	} else if (a.row > b.row) {
+		return 1;
+	} else {
+		if (a.collumn < b.collumn) {
+			return -1;
+		} else if (a.collumn > b.collumn) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 };
-
 // (e) => e.boardData sometimes returns an empty board :sus
 const boardData = findInPixiJsStage(window.stage, (e) => e.children?.length === 25).parent
 	.boardData;
@@ -70,16 +79,17 @@ const boardLetters = Object.values(boardData.getAllLetters())
 
 const letterMulti = boardData.getAllLettersList().find((m) => m.hasMultiplier());
 
-const wordMulti =
-	boardData.wordMultiplierPosition != null && Object.values(boardData.wordMultiplierPosition);
+const wordMulti = boardData.wordMultiplierPosition != null && boardData.wordMultiplierPosition;
 
 const data = {
 	letterMulti: {
-		col: letterMulti?.column,
-		row: letterMulti?.row,
-		multi: letterMulti?.getLetterMultiplier()
+		...(letterMulti != null && {
+			col: letterMulti.collumn,
+			row: letterMulti.row,
+			multi: letterMulti?.getLetterMultiplier()
+		})
 	},
-	...(wordMulti && { wordMulti: { col: wordMulti.column, row: wordMulti.row } })
+	...(wordMulti && { wordMulti: { col: wordMulti.collumn, row: wordMulti.row } })
 };
 
-window.copy(`${boardLetters},${JSON.stringify(data)}`);
+window.copy(`${boardLetters}|${JSON.stringify(data)}`);

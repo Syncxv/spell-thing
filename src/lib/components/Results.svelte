@@ -2,7 +2,7 @@
 	import { letterMatrixStore } from '$lib/stores/letter';
 	import type { Letter } from '$lib/types';
 	import { size } from '$lib/utils/constants';
-	import { generateGridFromCombo, generateGridFromComboClient } from '$lib/utils/generateGrid';
+	import { generateGridFromCombo } from '$lib/utils/generateGrid';
 	import Input from './Input.svelte';
 	import Carret from './icons/Carret.svelte';
 
@@ -20,8 +20,7 @@
 		.join('');
 
 	async function handleSubmit() {
-		if (combo.length != size * size) return console.error('invalid combo');
-		$letterMatrixStore = generateGridFromComboClient(combo, $letterMatrixStore);
+		$letterMatrixStore = generateGridFromCombo(combo);
 		letterMatrixStore.update((n) => n); // This forces the store to update its subscribers
 
 		const response = await fetch('/api/words', {
