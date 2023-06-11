@@ -1,4 +1,3 @@
-import fs from 'node:fs/promises';
 import { json } from '@sveltejs/kit';
 import type { Letter } from '$lib/types.js';
 import { size } from '$lib/utils/constants.js';
@@ -11,7 +10,7 @@ export interface Paylod {
 	combination: string;
 	wordLen: number;
 }
-export async function POST({ request }) {
+export async function POST({ request, fetch }) {
 	const { combination, wordLen }: Paylod = await request.json();
 
 	if (!combination || combination.length != size * size || !wordLen)
@@ -19,7 +18,7 @@ export async function POST({ request }) {
 
 	if (!cachedSet) {
 		console.log('READING FILE');
-		const words = await fs.readFile('./wordlist.txt', 'utf8');
+		const words = await (await fetch('/wordlist.txt')).text();
 		cachedSet = new Set(words.split('\n').map((l) => l.replace(/[\r]/g, '').toLowerCase()));
 	}
 
