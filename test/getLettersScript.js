@@ -69,19 +69,18 @@ const sortLetters = (a, b) => {
 	}
 };
 // (e) => e.boardData sometimes returns an empty board :sus
-const boardData = findInPixiJsStage(window.stage, (e) => e.children?.length === 25).parent
-	.boardData;
+let boardData = findInPixiJsStage(window.stage, (e) => e.children?.length === 25).parent.boardData;
 
 const boardLetters = Object.values(boardData.getAllLetters())
 	.sort(sortLetters)
 	.map((m) => m.display)
 	.join('');
 
-const letterMulti = boardData.getAllLettersList().find((m) => m.hasMultiplier());
+let letterMulti = boardData.getAllLettersList().find((m) => m.hasMultiplier());
 
-const wordMulti = boardData.wordMultiplierPosition != null && boardData.wordMultiplierPosition;
+let wordMulti = boardData.wordMultiplierPosition != null && boardData.wordMultiplierPosition;
 
-const data = {
+let data = {
 	letterMulti: {
 		...(letterMulti != null && {
 			col: letterMulti.collumn,
