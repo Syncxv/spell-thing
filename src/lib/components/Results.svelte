@@ -12,7 +12,7 @@
 	let hasSumbited = false;
 
 	let letterCount = 2;
-	let wordLen = 5;
+	let wordLen = 8;
 
 	let combo = $letterMatrixStore
 		.flat()
@@ -105,6 +105,13 @@
 							.join('') + (letterCount - 1) + wordIndex)}
 							<button
 								type="button"
+								style={`${
+									results[letterCount - 1][wordIndex].find((m) => m.wordMulti)
+										? 'background: red;'
+										: ''
+								}
+									${results[letterCount - 1][wordIndex].find((m) => m.letterMulti > 1) ? 'background: blue;' : ''}
+									`}
 								class="bg-gray-300 p-3 rounded-md text-black"
 								on:click={() => {
 									results[letterCount - 1][wordIndex].reduce((prev, curr) => {
