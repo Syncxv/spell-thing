@@ -11,7 +11,7 @@
 	let results: Letter[][][] = [];
 	let hasSumbited = false;
 
-	let letterCount = 1;
+	let letterCount = 2;
 	let wordLen = 5;
 
 	let combo = $letterMatrixStore
@@ -75,7 +75,7 @@
 
 				<div class="idkwhattocallthis relative h-10 w-full">
 					<button
-						on:click={() => (letterCount === 1 ? void 0 : letterCount--)}
+						on:click={() => (letterCount === 2 ? void 0 : letterCount--)}
 						type="button"
 						class="btn flex items-center justify-center absolute bg-gray-600 h-full w-[10%] cursor-pointer rounded-tl-[6px]"
 					>
@@ -83,7 +83,7 @@
 					</button>
 					<input
 						type="number"
-						min="1"
+						min="2"
 						max={wordLen}
 						bind:value={letterCount}
 						class="h-full w-full rounded-[7px] text-gray-950 text-center"

@@ -5,6 +5,7 @@
 	import { letterMatrixStore } from '$lib/stores/letter';
 	import type { Letter } from '$lib/types';
 	import { getConnectionPos } from '$lib/utils/connectLetters';
+	import { getThingy } from '$lib/utils/getMultiAb';
 	import { isAdjecent } from '$lib/utils/isAdjecent';
 	import { isSelected } from '$lib/utils/isSelected';
 
@@ -99,10 +100,12 @@
 							on:mouseover={() => onMouseOver(letter)}
 							on:focus={() => 'why'}
 							id={`${letter.col},${letter.row}`}
-							style="transform-style: preserve-3d;"
+							style="--l-multi: '{getThingy(letter.letterMulti)}'; transform-style: preserve-3d;"
 							class={`letter relative z-10 bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
 								isSelected(selectedLetters, letter) ? 'selected' : ''
-							} ${letter.wordMulti ? 'wordMulti' : ''}`}
+							} ${letter.letterMulti > 1 ? 'letterMulti' : ''} ${
+								letter.wordMulti ? 'wordMulti' : ''
+							}`}
 						>
 							{letter.letter}
 							{#if selectedLetters.length > 0 && isSelected(selectedLetters, letter) && selectedLetters[selectedLetters.length - 1].id !== letter.id}
