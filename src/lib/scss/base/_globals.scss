@@ -13,6 +13,23 @@ body {
 	background-color: rgb(75, 75, 228) !important;
 }
 
+.wordMulti::after {
+	--size: 50px;
+	content: '2x';
+	position: absolute;
+	top: calc((var(--size) / 2) * -1);
+	right: calc((var(--size) / 2) * -1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 25px;
+	height: var(--size);
+	width: var(--size);
+	color: black;
+	text-align: center;
+	background: white;
+}
+
 @media screen and (max-width: 820px) {
 	.hi {
 		height: 100%;

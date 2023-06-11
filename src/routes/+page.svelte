@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Solver } from '$lib/Solver';
 	import Line from '$lib/components/Line.svelte';
 	import Results from '$lib/components/Results.svelte';
 	import { letterMatrixStore } from '$lib/stores/letter';
@@ -68,6 +69,7 @@
 	$: {
 		if (typeof window != 'undefined') {
 			(window as any).$letterMatrixStore = $letterMatrixStore;
+			(window as any).Solver = Solver;
 		}
 		console.log(selectedLetters);
 	}
@@ -100,7 +102,7 @@
 							style="transform-style: preserve-3d;"
 							class={`letter relative z-10 bg-primary-500 flex items-center justify-center h-full w-full rounded-md select-none hover:outline-[2px] hover:outline-double hover:outline-slate-300 ${
 								isSelected(selectedLetters, letter) ? 'selected' : ''
-							}`}
+							} ${letter.wordMulti ? 'wordMulti' : ''}`}
 						>
 							{letter.letter}
 							{#if selectedLetters.length > 0 && isSelected(selectedLetters, letter) && selectedLetters[selectedLetters.length - 1].id !== letter.id}

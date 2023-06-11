@@ -41,7 +41,7 @@
 		results = data.result.map((m) =>
 			m
 				.map((e) => {
-					const res = e.map((l) => $letterMatrixStore[l.col][l.row]);
+					const res = e.map((l) => $letterMatrixStore[l.row][l.col]);
 
 					const word = res.map((m) => m.letter).join('');
 					if (seenWords.has(word)) return;
@@ -52,6 +52,8 @@
 				})
 				.filter((el): el is Letter[] => Boolean(el))
 		);
+
+		console.log(seenWords);
 
 		hasSumbited = true;
 	}
