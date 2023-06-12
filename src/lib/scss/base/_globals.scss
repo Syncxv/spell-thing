@@ -8,7 +8,13 @@ body {
 .center {
 	@apply flex justify-center items-center;
 }
-
+.btn {
+	@apply text-white font-medium py-2 px-4 rounded-md;
+	background-color: theme('colors.secondary.560') !important;
+	&:hover {
+		background-color: theme('colors.secondary.900') !important;
+	}
+}
 .selected {
 	background-color: rgb(75, 75, 228) !important;
 }
@@ -32,7 +38,6 @@ body {
 
 .letterMulti::after {
 	--size: 50px;
-	--quo: '"';
 	content: var(--l-multi);
 	position: absolute;
 	top: calc((var(--size) / 2) * -1);
@@ -47,6 +52,16 @@ body {
 	text-align: center;
 	background: black;
 	z-index: 9999;
+}
+
+dialog::backdrop {
+	background: rgba(0, 0, 0, 0.1);
+}
+
+@-moz-document url-prefix() {
+	.letter-container {
+		height: 20% !important;
+	}
 }
 
 @media screen and (max-width: 820px) {

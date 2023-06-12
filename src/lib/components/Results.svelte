@@ -121,11 +121,7 @@
 				{/if}
 			</div>
 
-			<button
-				type="button"
-				class="bg-purple-500 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md"
-				on:click={newBoard}>New Board</button
-			>
+			<button type="button" class="btn" on:click={newBoard}>New Board</button>
 		</div>
 	{:else}
 		<form
@@ -145,10 +141,7 @@
 				/>
 			</div>
 
-			<button
-				class="bg-purple-500 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md"
-				type="submit">Submit</button
-			>
+			<button class="btn" type="submit">Submit</button>
 		</form>
 	{/if}
 </div>

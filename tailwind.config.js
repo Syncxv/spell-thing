@@ -1,7 +1,12 @@
-const theme = {
+const primaryTheme = {
 	h: 304.857143,
 	s: 63.666667,
 	l: 15.588235
+};
+const secondaryTheme = {
+	h: 250.857143,
+	s: 63.666667,
+	l: 50.588235
 };
 
 const weights = {
@@ -22,7 +27,15 @@ const weights = {
 };
 
 const primaryValues = Object.entries(weights).reduce((acc, [key, value]) => {
-	acc[key] = `hsl(${theme.h}, ${theme.s}%, ${Math.max(0, theme.l + value)}%)`;
+	acc[key] = `hsl(${primaryTheme.h}, ${primaryTheme.s}%, ${Math.max(0, primaryTheme.l + value)}%)`;
+	return acc;
+}, {});
+
+const secondaryValues = Object.entries(weights).reduce((acc, [key, value]) => {
+	acc[key] = `hsl(${secondaryTheme.h}, ${secondaryTheme.s}%, ${Math.max(
+		0,
+		secondaryTheme.l + value
+	)}%)`;
 	return acc;
 }, {});
 
@@ -32,7 +45,8 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				primary: primaryValues
+				primary: primaryValues,
+				secondary: secondaryValues
 			}
 		}
 	},

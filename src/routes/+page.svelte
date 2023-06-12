@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Solver } from '$lib/Solver';
+	import Information from '$lib/components/Information.svelte';
 	import Line from '$lib/components/Line.svelte';
 	import Results from '$lib/components/Results.svelte';
 	import { letterMatrixStore } from '$lib/stores/letter';
@@ -99,7 +100,7 @@
 	style="grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));"
 	class="hi grid items-center justify-center p-7 h-fit"
 >
-	<div class="flex flex-col items-center w-full">
+	<div class="flex flex-col items-center w-[90%]">
 		<h1 class="mb-4">{selectedLetters.map((m) => m.letter).join('') || "g'day"}</h1>
 		<div
 			style="transform-style: preserve-3d;transform: translateZ(10px);"
@@ -108,7 +109,7 @@
 			{#each $letterMatrixStore as letters}
 				<div
 					style="transform-style: preserve-3d;transform: translateZ(10px);"
-					class="flex items-center justify-center gap-4 w-full h-full"
+					class="letter-container flex items-center justify-center gap-4 w-full h-full"
 				>
 					{#each letters as letter}
 						<div
@@ -141,3 +142,4 @@
 
 	<Results {moveFrom} />
 </div>
+<Information />
