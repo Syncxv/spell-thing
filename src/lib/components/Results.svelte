@@ -69,7 +69,7 @@
 					<button
 						on:click={() => (index === 1 ? void 0 : index--)}
 						type="button"
-						class="btn flex items-center justify-center absolute bg-gray-600 h-full w-[10%] cursor-pointer rounded-tl-[6px]"
+						class="flex items-center justify-center absolute bg-gray-600 h-full w-[10%] cursor-pointer rounded-tl-[6px]"
 					>
 						<Carret className="fill-gray-100" />
 					</button>
@@ -83,7 +83,7 @@
 					<button
 						on:click={() => (index === wordLen || results.length - 1 === index ? void 0 : index++)}
 						type="button"
-						class="btn flex items-center justify-center absolute right-0 top-0 bg-gray-600 h-full w-[10%] cursor-pointer rounded-tr-[6px]"
+						class="flex items-center justify-center absolute right-0 top-0 bg-gray-600 h-full w-[10%] cursor-pointer rounded-tr-[6px]"
 					>
 						<Carret className="fill-gray-100 rotate-180" />
 					</button>
