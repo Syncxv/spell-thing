@@ -1,0 +1,3 @@
+[submodule "src/lib/spell-cast-word-finder"]
+	path = src/lib/spell-cast-word-finder
+	url = https://github.com/Syncxv/spell-cast-word-finder
