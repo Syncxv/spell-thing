@@ -4,7 +4,6 @@
 	import { generateGridFromCombo } from '$lib/utils/generateGrid';
 	import Input from './Input.svelte';
 	import Carret from './icons/Carret.svelte';
-	import { onMount } from 'svelte';
 	import { Solver } from '$lib/Solver';
 
 	export let moveFrom: (from: Letter, to: Letter) => void;
@@ -32,16 +31,13 @@
 			validWordsSet = new Set(words.split('\n').map((l) => l.replace(/[\r]/g, '').toLowerCase()));
 		}
 
-		// rust wasm one is slower generaly but after the 9 letter words rust is faster. infact the js one doenst even finish XD
-		if (wordLen <= 99) {
-			const solver = new Solver({ grid: $letterMatrixStore, validWordsSet });
-			const tempRes: Letter[][][] = [];
-			for (let i = 1; i < wordLen + 1; ++i) {
-				tempRes.push(solver.getCombinationsRecursive(i));
-			}
-
-			results = tempRes;
+		const solver = new Solver({ grid: $letterMatrixStore, validWordsSet });
+		const tempRes: Letter[][][] = [];
+		for (let i = 1; i < wordLen + 1; ++i) {
+			tempRes.push(solver.getCombinationsRecursive(i));
 		}
+
+		results = tempRes;
 
 		hasSumbited = true;
 		console.timeEnd('hi');
