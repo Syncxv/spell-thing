@@ -1,13 +1,7 @@
 import type { Letter } from './types';
-import { Trie } from './utils/Trie';
+import TrieSearch from 'trie-search';
 import { directions, size } from './utils/constants';
 
-interface State {
-	row: number;
-	col: number;
-	visited: boolean[][];
-	combination: Letter[];
-}
 interface Props {
 	grid: Letter[][];
 	validWordsSet: Set<string>;
@@ -16,17 +10,17 @@ export class Solver {
 	grid: Letter[][];
 	size: number;
 	validWordsSet: Set<string>;
-	validWordsTrie: Trie<boolean>;
+	validWordsTrie: TrieSearch<string>;
 
 	constructor({ grid, validWordsSet }: Props) {
 		this.grid = grid;
 		this.size = size;
 		this.validWordsSet = validWordsSet;
 
-		this.validWordsTrie = new Trie<boolean>();
+		this.validWordsTrie = new TrieSearch<string>();
 
 		for (const word of validWordsSet) {
-			this.validWordsTrie.insert(word, true);
+			this.validWordsTrie.map(word.toLowerCase(), word);
 		}
 	}
 
@@ -46,16 +40,24 @@ export class Solver {
 
 		// add the letter at this cell to the combination
 		combination.push(this.grid[row][col]);
+
+		const word = combination
+			.map((s) => s.letter)
+			.join('')
+			.toLowerCase();
+
 		// if the combination is of the desired length, add it to the allCombinations list
 		if (combination.length === desired) {
-			const word = combination
-				.map((s) => s.letter)
-				.join('')
-				.toLowerCase();
-			if (this.validWordsTrie.contains(word)) {
+			const results = this.validWordsTrie.search(word);
+			if (results[0] === word) {
 				allCombinations.push(combination.slice());
 			}
 		} else {
+			if (!this.validWordsTrie.search(word).length) {
+				combination.pop();
+				visited[row][col] = false;
+				return;
+			}
 			for (const [dx, dy] of Object.values(directions)) {
 				this.getAllCombinations(row + dx, col + dy, visited, combination, allCombinations, desired);
 			}
@@ -63,63 +65,6 @@ export class Solver {
 
 		combination.pop();
 		visited[row][col] = false;
-	}
-
-	getAllCombinationsIterative(desired: number): Letter[][] {
-		const allCombinations: Letter[][] = [];
-		const stack: State[] = [];
-
-		for (let row = 0; row < this.size; row++) {
-			for (let col = 0; col < this.size; col++) {
-				const visited: boolean[][] = Array(this.size)
-					.fill(false)
-					.map(() => Array(this.size).fill(false));
-				const combination: Letter[] = [this.grid[row][col]];
-				visited[row][col] = true;
-				stack.push({ row, col, visited, combination });
-
-				while (stack.length > 0) {
-					const currentState = stack.pop()!;
-					const { row, col, visited, combination } = currentState;
-
-					if (combination.length === desired) {
-						const word = combination
-							.map((s) => s.letter)
-							.join('')
-							.toLowerCase();
-						if (this.validWordsSet.has(word)) {
-							allCombinations.push(combination.slice());
-						}
-					} else {
-						for (const [dx, dy] of Object.values(directions)) {
-							const newRow = row + dx;
-							const newCol = col + dy;
-
-							if (
-								newRow >= 0 &&
-								newRow < this.size &&
-								newCol >= 0 &&
-								newCol < this.size &&
-								!visited[newRow][newCol]
-							) {
-								const newVisited = visited.map((row) => row.slice());
-								newVisited[newRow][newCol] = true;
-								const newCombination = combination.slice();
-								newCombination.push(this.grid[newRow][newCol]);
-								stack.push({
-									row: newRow,
-									col: newCol,
-									visited: newVisited,
-									combination: newCombination
-								});
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return allCombinations;
 	}
 
 	getCombinationsRecursive(n = 4) {
@@ -137,25 +82,5 @@ export class Solver {
 		}
 
 		return allCombinations;
-	}
-
-	getCombinationsIterative(n = 4) {
-		return this.getAllCombinationsIterative(n);
-	}
-
-	getWords(arr: Letter[][]) {
-		const result: string[] = [];
-
-		for (let i = 0; i < arr.length; i++) {
-			const word = arr[i]
-				.map((s) => s.letter)
-				.join('')
-				.toLowerCase();
-			if (this.validWordsTrie.contains(word)) {
-				result.push(word);
-			}
-		}
-
-		return result;
 	}
 }

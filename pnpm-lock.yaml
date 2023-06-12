@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+dependencies:
+  trie-search:
+    specifier: ^1.4.2
+    version: 1.4.2
+
 devDependencies:
   '@playwright/test':
     specifier: ^1.28.1
@@ -1299,6 +1304,12 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /hasharray@1.1.2:
+    resolution: {integrity: sha512-7w3idwaVXX9gL9LiTCBSNKRGTBcp2WI/kf13UYeZ9+trOGBHVYHei6qtMY6DVnwGOouVUSRg0+L2xf4Q2/CmzA==}
+    dependencies:
+      jclass: 1.2.1
+    dev: false
+
   /ignore@5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
     engines: {node: '>= 4'}
@@ -1374,6 +1385,11 @@ packages:
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
+
+  /jclass@1.2.1:
+    resolution: {integrity: sha512-mRx8uv1qJLOtxbRf3IWOQIH2ro7VIPn6ZkhbTcUJvJEslLzYA7BSATXDi/GR1yKYV9DASsjTZL+0YJPdqSMznw==}
+    engines: {node: '>= 0.6'}
+    dev: false
 
   /jiti@1.18.2:
     resolution: {integrity: sha512-QAdOptna2NYiSSpv0O/BwoHBSmz4YhpzJHyi+fnMRTXFjp7B8i/YG5Z8IfusxB1ufjcD2Sre1F3R+nX3fvy7gg==}
@@ -2174,6 +2190,12 @@ packages:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
     dev: true
+
+  /trie-search@1.4.2:
+    resolution: {integrity: sha512-dkZ5qQabfwtLzDj34sIBz/zqTI3q4jG5Aa2Eaq7kW3btjRoM7o3HP7gX0ANgMSiefLAx1qlyr0X3OMf9ZuCWAA==}
+    dependencies:
+      hasharray: 1.1.2
+    dev: false
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}

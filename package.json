@@ -3,10 +3,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "pnpm build:scf && vite dev",
-		"build": "pnpm build:scf && vite build",
-		"build:scf": "cd ./src/lib/spell-cast-word-finder && wasm-pack build --target web --release",
-		"update:scf": "cd ./src/lib/spell-cast-word-finder && git pull",
+		"dev": "vite dev",
+		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -39,5 +37,8 @@
 		"vite": "^4.3.0",
 		"vitest": "^0.25.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"trie-search": "^1.4.2"
+	}
 }

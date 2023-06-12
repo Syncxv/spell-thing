@@ -8,7 +8,6 @@
 	import { getThingy } from '$lib/utils/getMultiAb';
 	import { isAdjecent } from '$lib/utils/isAdjecent';
 	import { isSelected } from '$lib/utils/isSelected';
-	import { Wrapper } from '$lib/spell-cast-word-finder/pkg/scf';
 	import { onMount } from 'svelte';
 	let selectedLetters: Letter[] = [];
 
@@ -17,7 +16,6 @@
 	onMount(() => {
 		(window as any).$letterMatrixStore = $letterMatrixStore;
 		(window as any).Solver = Solver;
-		(window as any).Wrapper = Wrapper;
 		getValid().then((dude) => {
 			(window as any).solver = new Solver({ grid: $letterMatrixStore, validWordsSet: dude });
 		});
