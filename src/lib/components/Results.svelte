@@ -8,12 +8,17 @@
 
 	export let moveFrom: (from: Letter, to: Letter) => void;
 
+	interface Result {
+		count: number;
+		words: Letter[][];
+	}
+
 	let validWordsSet: Set<string>;
 
-	let results: Letter[][][] = [];
+	let results: Result[] = [];
 	let hasSumbited = false;
 
-	let letterCount = 2;
+	let index = 1;
 	let wordLen = 8;
 
 	let combo = $letterMatrixStore
@@ -37,7 +42,9 @@
 			tempRes.push(solver.getCombinationsRecursive(i));
 		}
 
-		results = tempRes;
+		results = tempRes
+			.map((m, i) => m.length && { count: i + 1, words: m })
+			.filter(Boolean) as Result[];
 
 		hasSumbited = true;
 		console.timeEnd('hi');
@@ -60,7 +67,7 @@
 
 				<div class="idkwhattocallthis relative h-10 w-full">
 					<button
-						on:click={() => (letterCount === 2 ? void 0 : letterCount--)}
+						on:click={() => (index === 1 ? void 0 : index--)}
 						type="button"
 						class="btn flex items-center justify-center absolute bg-gray-600 h-full w-[10%] cursor-pointer rounded-tl-[6px]"
 					>
@@ -70,11 +77,11 @@
 						type="number"
 						min="2"
 						max={wordLen}
-						bind:value={letterCount}
+						bind:value={results[index].count}
 						class="h-full w-full rounded-[7px] text-gray-950 text-center"
 					/>
 					<button
-						on:click={() => (letterCount === wordLen ? void 0 : letterCount++)}
+						on:click={() => (index === wordLen || results.length - 1 === index ? void 0 : index++)}
 						type="button"
 						class="btn flex items-center justify-center absolute right-0 top-0 bg-gray-600 h-full w-[10%] cursor-pointer rounded-tr-[6px]"
 					>
@@ -82,24 +89,22 @@
 					</button>
 				</div>
 
-				{#if results[letterCount - 1]}
-					<h2>{letterCount} Letter Words</h2>
+				{#if results[index]}
+					<h2>{index} Letter Words</h2>
 					<div class="flex flex-wrap gap-3 max-h-[27rem] overflow-y-auto">
-						{#each results[letterCount - 1] as word, wordIndex (word
+						{#each results[index].words as word, wordIndex (word
 							.map((letter) => letter.letter)
-							.join('') + (letterCount - 1) + wordIndex)}
+							.join('') + index + wordIndex)}
 							<button
 								type="button"
 								style={`${
-									results[letterCount - 1][wordIndex].find((m) => m.wordMulti)
-										? 'background: red;'
-										: ''
+									results[index].words[wordIndex].find((m) => m.wordMulti) ? 'background: red;' : ''
 								}
-									${results[letterCount - 1][wordIndex].find((m) => m.letterMulti > 1) ? 'background: blue;' : ''}
+									${results[index].words[wordIndex].find((m) => m.letterMulti > 1) ? 'background: blue;' : ''}
 									`}
 								class="bg-gray-300 p-3 rounded-md text-black"
 								on:click={() => {
-									results[letterCount - 1][wordIndex].reduce((prev, curr) => {
+									results[index].words[wordIndex].reduce((prev, curr) => {
 										moveFrom(prev, curr);
 										return curr;
 									});
@@ -110,8 +115,8 @@
 						{/each}
 					</div>
 
-					{#if results[letterCount - 1].length === 0}
-						<p>welp no results for {letterCount}</p>
+					{#if results[index].words.length === 0}
+						<p>welp no results for {index}</p>
 					{/if}
 				{/if}
 			</div>
