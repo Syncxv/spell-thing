@@ -8,10 +8,20 @@
 	import { getThingy } from '$lib/utils/getMultiAb';
 	import { isAdjecent } from '$lib/utils/isAdjecent';
 	import { isSelected } from '$lib/utils/isSelected';
-
+	import { Wrapper } from '$lib/spell-cast-word-finder/pkg/scf';
+	import { onMount } from 'svelte';
 	let selectedLetters: Letter[] = [];
 
 	let isMouseDown = false;
+
+	onMount(() => {
+		(window as any).$letterMatrixStore = $letterMatrixStore;
+		(window as any).Solver = Solver;
+		(window as any).Wrapper = Wrapper;
+		getValid().then((dude) => {
+			(window as any).solver = new Solver({ grid: $letterMatrixStore, validWordsSet: dude });
+		});
+	});
 
 	function getLetterFromEvent(e: MouseEvent): Letter | null {
 		return $letterMatrixStore.flat().find((m) => m.elem === e.target) || null;
@@ -67,11 +77,19 @@
 		pushLetter(to);
 	}
 
+	const getValid = (function getWordList() {
+		let cachedSet: Set<string>;
+		return async () => {
+			if (!cachedSet) {
+				const words = await (await fetch('/wordlist.txt')).text();
+				cachedSet = new Set(words.split('\n').map((l) => l.replace(/[\r]/g, '').toLowerCase()));
+			}
+
+			return cachedSet;
+		};
+	})();
+
 	$: {
-		if (typeof window != 'undefined') {
-			(window as any).$letterMatrixStore = $letterMatrixStore;
-			(window as any).Solver = Solver;
-		}
 		console.log(selectedLetters);
 	}
 </script>

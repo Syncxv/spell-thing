@@ -28,7 +28,7 @@ export async function POST({ request, fetch }) {
 
 	const result: Letter[][][] = [];
 	for (let i = 1; i < wordLen + 1; ++i) {
-		result.push(solver.getAllCombinationsIterative(i));
+		result.push(solver.getCombinationsRecursive(i));
 	}
 
 	return json(
