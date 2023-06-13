@@ -40,7 +40,7 @@ export class Trie<T> {
 	}
 
 	_dfs(node: TrieNode<T>): T[] {
-		let result = [];
+		let result: T[] = [];
 		if (node.isEndOfWord) {
 			result.push(node.value);
 		}
