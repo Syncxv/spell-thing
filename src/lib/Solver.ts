@@ -1,6 +1,6 @@
 import type { Letter } from './types';
-import TrieSearch from 'trie-search';
 import { directions, size } from './utils/constants';
+import { Trie } from './utils/Trie';
 
 interface Props {
 	grid: Letter[][];
@@ -10,17 +10,17 @@ export class Solver {
 	grid: Letter[][];
 	size: number;
 	validWordsSet: Set<string>;
-	validWordsTrie: TrieSearch<string>;
+	validWordsTrie: Trie<string>;
 
 	constructor({ grid, validWordsSet }: Props) {
 		this.grid = grid;
 		this.size = size;
 		this.validWordsSet = validWordsSet;
 
-		this.validWordsTrie = new TrieSearch<string>();
+		this.validWordsTrie = new Trie<string>();
 
 		for (const word of validWordsSet) {
-			this.validWordsTrie.map(word.toLowerCase(), word);
+			this.validWordsTrie.insert(word.toLowerCase(), word);
 		}
 	}
 
@@ -42,7 +42,7 @@ export class Solver {
 		combination.push(this.grid[row][col]);
 
 		const word = combination
-			.map((s) => s.letter)
+			.map((s) => s.letter ?? s.display)
 			.join('')
 			.toLowerCase();
 
@@ -72,7 +72,7 @@ export class Solver {
 		const combination: Letter[] = [];
 		const visited = Array(this.size)
 			.fill(false)
-			.map(() => Array(this.size).fill(false));
+			.map(() => Array<boolean>(this.size).fill(false));
 
 		// start the recursive process from each cell in the grid
 		for (let row = 0; row < this.size; row++) {

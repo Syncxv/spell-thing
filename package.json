@@ -11,7 +11,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"stuff": "tsc ./src/lib/Solver.ts --outDir ./test/out"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -37,8 +38,5 @@
 		"vite": "^4.3.0",
 		"vitest": "^0.25.3"
 	},
-	"type": "module",
-	"dependencies": {
-		"trie-search": "^1.4.2"
-	}
+	"type": "module"
 }
