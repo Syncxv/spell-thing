@@ -53,7 +53,7 @@ export class Solver {
 				allCombinations.push(combination.slice());
 			}
 		} else {
-			if (!this.validWordsTrie.search(word).length) {
+			if (!this.validWordsTrie.exists(word)) {
 				combination.pop();
 				visited[row][col] = false;
 				return;

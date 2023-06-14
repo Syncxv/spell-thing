@@ -28,6 +28,17 @@ export class Trie<T> {
 		node.value = value;
 	}
 
+	exists(query: string): boolean {
+		let node = this.root;
+		for (const char of query) {
+			if (!(char in node.children)) {
+				return false;
+			}
+			node = node.children[char];
+		}
+		return node.isEndOfWord;
+	}
+
 	search(query: string) {
 		let node = this.root;
 		for (const char of query) {
