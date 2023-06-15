@@ -28,7 +28,7 @@ export class Trie<T> {
 		node.value = value;
 	}
 
-	exists(query: string): boolean {
+	startsWith(query: string) {
 		let node = this.root;
 		for (const char of query) {
 			if (!(char in node.children)) {
@@ -36,7 +36,7 @@ export class Trie<T> {
 			}
 			node = node.children[char];
 		}
-		return node.isEndOfWord;
+		return true;
 	}
 
 	search(query: string) {
