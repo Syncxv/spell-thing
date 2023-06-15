@@ -10,10 +10,6 @@ body {
 }
 .btn {
 	@apply text-white font-medium py-2 px-4 rounded-md;
-	background-color: theme('colors.secondary.560') !important;
-	&:hover {
-		background-color: theme('colors.secondary.900') !important;
-	}
 }
 .selected {
 	background-color: rgb(75, 75, 228) !important;

@@ -19,7 +19,7 @@
 	let hasSumbited = false;
 
 	let index = 1;
-	let wordLen = 8;
+	let wordLen = 15;
 
 	let combo = $letterMatrixStore
 		.flat()
@@ -121,7 +121,9 @@
 				{/if}
 			</div>
 
-			<button type="button" class="btn" on:click={newBoard}>New Board</button>
+			<button type="button" class="btn bg-secondary-560 hover:bg-secondary-900" on:click={newBoard}
+				>New Board</button
+			>
 		</div>
 	{:else}
 		<form
@@ -133,7 +135,7 @@
 				<Input
 					type="number"
 					min={1}
-					max={15}
+					max={25}
 					id="wordLen"
 					label="Max Word Length"
 					wrapperClassName="mt-4"
@@ -141,7 +143,7 @@
 				/>
 			</div>
 
-			<button class="btn" type="submit">Submit</button>
+			<button class="btn bg-secondary-560 hover:bg-secondary-900" type="submit">Submit</button>
 		</form>
 	{/if}
 </div>
