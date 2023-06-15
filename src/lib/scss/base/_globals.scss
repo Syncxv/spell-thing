@@ -34,6 +34,7 @@ body {
 	color: black;
 	text-align: center;
 	background: white;
+	pointer-events: none;
 }
 
 .letterMulti::after {
@@ -52,6 +53,7 @@ body {
 	text-align: center;
 	background: black;
 	z-index: 9999;
+	pointer-events: none;
 }
 
 dialog::backdrop {
