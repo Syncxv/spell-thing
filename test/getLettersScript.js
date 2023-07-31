@@ -68,8 +68,10 @@ const sortLetters = (a, b) => {
 		}
 	}
 };
-// (e) => e.boardData sometimes returns an empty board :sus
-let boardData = findInPixiJsStage(window.stage, (e) => e.children?.length === 25).parent.boardData;
+
+let board = findInPixiJsStage(stage, (e) => e.board).board;
+// findInPixiJsStage(stage, (e) => e.playerState)
+let boardData = board.boardData;
 
 const boardLetters = Object.values(boardData.getAllLetters())
 	.sort(sortLetters)
